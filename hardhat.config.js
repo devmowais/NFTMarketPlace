@@ -8,13 +8,12 @@ const POLYGON_PRIVATE_KEY = fs.readFileSync(".env").toString();
 /** @type import('hardhat/config').HardhatUserConfig */
 
 module.exports = {
-  defaultNetwork: "hardhat",
+  defaultNetwork: "polygon_mumbai",
   networks: {
     hardhat: {
-      chainId: 80001
     },
     polygon_mumbai: {
-      url: "https://rpc-mumbai.maticvigil.com",
+      url: "https://polygon-mumbai.g.alchemy.com/v2/6GL8E0Q59JorzOeI1piiTXzNjSAXzvKi",
       accounts: [POLYGON_PRIVATE_KEY]
     }
   },
