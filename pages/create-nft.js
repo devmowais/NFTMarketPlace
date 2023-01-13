@@ -1,16 +1,32 @@
 import { useState } from 'react'
 import { ethers } from 'ethers'
-import { create as ipfsHttpClient } from 'ipfs-http-client'
+// import { create as ipfsHttpClient } from 'ipfs-http-client'
 import { useRouter } from 'next/router'
 import Web3Modal from 'web3modal'
-
-const client = ipfsHttpClient('https://ipfs.infura.io:5001/api/v0')
-
-import {
-  marketplaceAddress
-} from '../config'
-
+import { marketplaceAddress } from '../config'
 import NFTMarketplace from '../artifacts/contracts/NFTMarketplace.sol/NFTMarketplace.json'
+
+// const client = ipfsHttpClient('https://nftmp.infura-ipfs.io/')
+
+
+import { create } from 'ipfs-http-client';
+
+const projectId = process.env.INFURA_IPFS_ID;
+const projectSecret = process.env.INFURA_IPFS_SECRET;
+
+const auth =
+  'Basic ' + Buffer.from(projectId + ':' + projectSecret).toString('base64');
+
+const client = create({
+  host: 'ipfs.infura.io',
+  port: 5001,
+  protocol: 'https',
+  headers: {
+    authorization: auth,
+  },
+});
+
+
 
 export default function CreateItem() {
   const [fileUrl, setFileUrl] = useState(null)
@@ -26,7 +42,7 @@ export default function CreateItem() {
           progress: (prog) => console.log(`received: ${prog}`)
         }
       )
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`
+      const url = `https://ipfs.infura.io/${added.path}`
       setFileUrl(url)
     } catch (error) {
       console.log('Error uploading file: ', error)
@@ -41,7 +57,7 @@ export default function CreateItem() {
     })
     try {
       const added = await client.add(data)
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`
+      const url = `https://ipfs.infura.io/${added.path}`
       /* after file is uploaded to IPFS, return the URL to use it in the transaction */
       return url
     } catch (error) {
